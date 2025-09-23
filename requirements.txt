@@ -1,0 +1,11 @@
+yfinance
+statsmodels.tsa.statespace.sarimax
+plotly.graph_object
+pandas
+numpy
+holidays
+langchain_ollama
+streamlit
+asyncio
+tqdm_asyncio
+time
