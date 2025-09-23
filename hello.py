@@ -1,5 +1,5 @@
 # Data Importing Libraries
-from newsapi import NewsApiClient
+
 import yfinance as yf
 from finvizfinance.quote import finvizfinance
 
@@ -345,4 +345,5 @@ if run_button:
             st.write(f'Pearson correlation between sentiment and stock percentage change: {cpc2}')
 
         except Exception as e:
+
             st.error(f"An error occurred: {str(e)}")
