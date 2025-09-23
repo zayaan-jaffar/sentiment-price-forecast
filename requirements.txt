@@ -1,11 +1,10 @@
 yfinance
 statsmodels
-plotly.graph_object
+plotly
 pandas
 numpy
 holidays
-langchain_ollama
+langchain-ollama
 streamlit
 asyncio
-tqdm_asyncio
-time
+tqdm
