@@ -310,7 +310,6 @@ def plot_residuals_time(fit, combined_df):
     st.plotly_chart(fig)
 
 st.sidebar.title("Predicting Stock Prices by AI News Sentiment")
-st.sidebar.write("OLLAMA_NUM_PARALLEL =", os.getenv("OLLAMA_NUM_PARALLEL", "not set"))
 ticker = st.sidebar.text_input("Enter stock ticker:",value='AAPL')
 company_name = st.sidebar.text_input("Enter stock company:",value='Apple')
 
@@ -347,4 +346,5 @@ if run_button:
         except Exception as e:
 
             st.error(f"An error occurred: {str(e)}")
+
 
