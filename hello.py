@@ -1,7 +1,7 @@
 # Data Importing Libraries
 
 import yfinance as yf
-from finvizfinance.quote import finvizfinance
+
 
 # Data Modeling Library
 from statsmodels.tsa.statespace.sarimax import SARIMAX
@@ -347,3 +347,4 @@ if run_button:
         except Exception as e:
 
             st.error(f"An error occurred: {str(e)}")
+
