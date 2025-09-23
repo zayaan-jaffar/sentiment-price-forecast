@@ -1,5 +1,5 @@
 yfinance
-statsmodels.tsa.statespace.sarimax
+statsmodels
 plotly.graph_object
 pandas
 numpy
