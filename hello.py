@@ -131,7 +131,6 @@ async def get_news_data_async(df, batch_size=16):
         status_text.text(f"Processing batch {i+1} of {len(batches)}...")
 
     progress_bar.empty()
-    status_text.text("Classification complete ✅")
 
     news_df['Sentiment'] = results
     news_df = news_df[news_df['Sentiment'] != 'NEUTRAL']
@@ -321,6 +320,7 @@ if run_button:
 
         except Exception as e:
             st.error(f"An error occurred: {str(e)}")
+
 
 
 
