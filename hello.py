@@ -67,7 +67,8 @@ def google_news_historical(ticker, company_name, months_back=12):
                     })
                 except Exception:
                     continue
-
+                    
+            print(f"    Found {month_articles} articles for {prev_month.strftime('%Y-%m')}")
             time.sleep(0.5)  # Be respectful
         except Exception:
             continue
@@ -109,7 +110,7 @@ async def get_news_data_async(df, batch_size=16):
     """
     news_df = df.drop_duplicates(subset=['title']).copy()
     news_df['title'] = news_df['title'].str.lower()
-
+    print(len(news_df['title'])
     # Split into batches
     batches = [
         news_df['title'].iloc[i:i + batch_size].tolist()
@@ -320,4 +321,5 @@ if run_button:
 
         except Exception as e:
             st.error(f"An error occurred: {str(e)}")
+
 
