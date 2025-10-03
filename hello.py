@@ -79,17 +79,17 @@ def google_news_historical(ticker, company_name, months_back=12):
 # Async Sentiment Classification
 # -------------------------------
 
-async def classify_sentiment_async(title: str) -> str:
-    """Async FinBERT sentiment classification for one title."""
-    def _classify(t):
-        result = classifier(t)[0]
-        label = result["label"].upper()
-        if label not in valid_labels:
-            label = "NEUTRAL"
-        return label
+async def classify_batch_async(titles):
+    """Classify a batch of titles with FinBERT asynchronously."""
+    def _classify(batch):
+        results = classifier(batch, truncation=True)
+        labels = []
+        for r in results:
+            label = r["label"].upper()
+            labels.append(label)
+        return labels
 
-    return await asyncio.to_thread(_classify, title)
-
+    return await asyncio.to_thread(_classify, titles)
 
 async def classify_sentiments_async(titles):
     """Classify a batch of titles asynchronously with FinBERT."""
@@ -98,8 +98,15 @@ async def classify_sentiments_async(titles):
     return sentiments
 
 
-async def get_news_data_async(df, batch_size=5):
-    """Async news data processing with FinBERT sentiment."""
+async def get_news_data_async(df, batch_size=16):
+    """
+    Async version of news data processing:
+    - Deduplicate
+    - Lowercase titles
+    - Async batched sentiment classification with progress bar
+    - Drop NEUTRAL
+    - Parse dates
+    """
     news_df = df.drop_duplicates(subset=['title']).copy()
     news_df['title'] = news_df['title'].str.lower()
 
@@ -109,17 +116,23 @@ async def get_news_data_async(df, batch_size=5):
         for i in range(0, len(news_df), batch_size)
     ]
 
-    # Run batches concurrently
-    results = await tqdm_asyncio.gather(
-        *[classify_sentiments_async(batch) for batch in batches],
-        total=len(batches),
-        desc='Classifying headlines'
-    )
+    results = []
+    progress_bar = st.progress(0)
+    status_text = st.empty()
 
-    # Flatten list of lists
-    sentiments = [s for batch in results for s in batch]
+    for i, batch in enumerate(batches):
+        sentiments = await classify_batch_async(batch)
+        results.extend(sentiments)
 
-    news_df['Sentiment'] = sentiments
+        # Update Streamlit progress bar
+        progress = int((i + 1) / len(batches) * 100)
+        progress_bar.progress(progress)
+        status_text.text(f"Processing batch {i+1} of {len(batches)}...")
+
+    progress_bar.empty()
+    status_text.text("Classification complete ✅")
+
+    news_df['Sentiment'] = results
     news_df = news_df[news_df['Sentiment'] != 'NEUTRAL']
 
     # Parse dates
@@ -307,3 +320,4 @@ if run_button:
 
         except Exception as e:
             st.error(f"An error occurred: {str(e)}")
+
