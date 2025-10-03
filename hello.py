@@ -29,7 +29,7 @@ import os
 
 llm = OllamaLLM(model='llama3.1',temperature=0)
 
-
+#yo you see this
 
 filename = 'aapl_google_news_historical.csv'
 valid_labels = {"POSITIVE", "NEGATIVE", "NEUTRAL"}
